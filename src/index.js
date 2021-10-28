@@ -142,7 +142,7 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
-  if ( ( message === "!help" ) || ( message === "!voice help" ) || ( message ==="!tts" ) ) {
+  if ( ( message === "!help" ) || ( message ==="!tts" ) ) {
     client.say( target, `@${ context[ "display-name" ] } "!voice [speaker|locale] [speed]" | "!currentvoice" | "!randomvoice" | "!voices" LilZ` );
     return;
   }

@@ -19,10 +19,13 @@ Twitch bot that handles chat text-to-speech, using the `Say` library, and the `T
 }
 ```
 
-## Bot Commands (not including shortcuts)
->!help
+## Bot Commands
+*(`!repo|!bot` for code and downloading the bot)*
 
-## Set voice
+### Help
+>!help|!tts
+
+### Set voice
 >!voice [speaker|locale] [speed]
 
 For example:
@@ -32,13 +35,13 @@ or
 
 >!voice bad_news 0.69
 
-## Get current voice
->!currentvoice
+### Get current voice
+>!currentvoice|!cv
 
-## Set a random voice
->!randomvoice
+### Set a random voice
+>!randomvoice|!voice random|!random|!rv
 
-# List of Available Voices
+### List of Available Voices
 >!voices
 
 - Agnes (en_US)
