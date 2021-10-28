@@ -95,9 +95,14 @@ const saveUserPreference = ( userId, preference ) => {
 
   preferencesByUserId[ userId ] = { ...preference };
 
-  // store user preferences in a local file, so that if the bot is restarted
-  // they can get their last-assigned voices again
-  fs.writeFileSync( "../preferences.json", JSON.stringify( preferencesByUserId, null, 2 ) );
+  try {
+    // store user preferences in a local file, so that if the bot is restarted
+    // they can get their last-assigned voices again
+    fs.writeFileSync( `preferences.json`, JSON.stringify( preferencesByUserId, null, 2 ) );
+  }
+  catch ( error ) {
+    console.error( error );
+  }
 }
 
 // called every time a message is sent in the chat
@@ -159,8 +164,6 @@ client.on( "message", ( target, context, message, self ) => {
     }
     const voice = randomElement( voices, "speaker" );
     const rate = randomElement( rates );
-
-    preferencesByUserId[ userId ] = { voice, rate };
 
     saveUserPreference( userId, { voice, rate } );
     speak( `${ context[ "display-name" ] } set their voice to ${ voice }`, userId );
