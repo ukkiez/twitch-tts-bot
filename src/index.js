@@ -128,7 +128,7 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( ( message === "!repo" ) || ( message === "!bot" ) ) {
-    client.say( target, `@${ context[ "display-name" ] } See the code here: https://github.com/ukkiez/twitch-tts-bot` );
+    client.say( target, `@${ context[ "display-name" ] } See the code/download the bot here: https://github.com/ukkiez/twitch-tts-bot` );
   }
 
   if ( message === "!voices" ) {
@@ -143,7 +143,7 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( ( message === "!help" ) || ( message ==="!tts" ) ) {
-    client.say( target, `@${ context[ "display-name" ] } "!voice [speaker|locale] [speed]" | "!currentvoice" | "!randomvoice" | "!voices" LilZ` );
+    client.say( target, `@${ context[ "display-name" ] } "!voice [speaker|locale] [speed]" | "!currentvoice" | "!randomvoice" | "!voices" | See the "About" section below strim for more LilZ` );
     return;
   }
 
