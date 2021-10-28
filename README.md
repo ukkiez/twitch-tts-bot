@@ -23,7 +23,7 @@ Twitch bot that handles chat text-to-speech, using MacOS's native `Say` library,
 >!help
 
 ## Set voice
->!voice [speaker] [speed]
+>!voice [speaker|locale] [speed]
 
 For example:
 >!voice Damayanti
