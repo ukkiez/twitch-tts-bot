@@ -1,5 +1,5 @@
-# Twitch TTS Bot (MacOS/Linux)
-Twitch bot that handles chat text-to-speech, using MacOS's native `Say` library, and the `TmiJS` module.
+# Twitch TTS Bot (currently MacOS/Linux)
+Twitch bot that handles chat text-to-speech, using the `Say` library, and the `TmiJS` module.
 
 ## Installation / setup
 - Clone repo

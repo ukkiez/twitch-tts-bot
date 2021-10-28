@@ -1,6 +1,5 @@
 const tmi = require("tmi.js");
-const Say = require( "say" ).Say;
-const say = new Say( "darwin" );
+const say = require( "say" );
 
 const fs = require( "fs" );
 
