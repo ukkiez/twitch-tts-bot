@@ -4,9 +4,10 @@ const say = new Say( "darwin" );
 
 const fs = require( "fs" );
 
-const { username, password, channels } = require( "./config.json" );
+const { username, password, channels } = require( "../config.json" );
+const preferencesByUserId = require( "../userPreferences.json");
+
 const { voices, rates } = require( "./data.js" );
-const preferencesByUserId = require( "./userPreferences.json");
 
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
@@ -96,7 +97,7 @@ const saveUserPreference = ( userId, preference ) => {
 
   // store user preferences in a local file, so that if the bot is restarted
   // they can get their last-assigned voices again
-  fs.writeFileSync( "./userPreferences.json", JSON.stringify( preferencesByUserId, null, 2 ) );
+  fs.writeFileSync( "../userPreferences.json", JSON.stringify( preferencesByUserId, null, 2 ) );
 }
 
 // called every time a message is sent in the chat
