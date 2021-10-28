@@ -127,6 +127,10 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  if ( ( message === "!repo" ) || ( message === "!bot" ) ) {
+    client.say( target, `@${ context[ "display-name" ] } See the code here: https://github.com/ukkiez/twitch-tts-bot` );
+  }
+
   if ( message === "!voices" ) {
     // list all voices and their locales
     client.say( target, speakerList.join( ", " ) );
