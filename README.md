@@ -1,4 +1,19 @@
-# Commands
+# Twitch TTS Bot
+Twitch bot that handles chat text-to-speech, using MacOS's native `Say` library, and the `TmiJS` module.
+
+## Bot Config
+`config.json` structure:
+```
+{
+  identity: {
+    username: "<Bot Username>",
+    password: "<Bot OAuth Token"
+  },
+  channels: ["<Channel Name>", ...]
+}
+```
+
+# Bot Commands (excluding shortcuts)
 >!help
 
 ## Set voice
