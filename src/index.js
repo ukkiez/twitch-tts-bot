@@ -54,7 +54,7 @@ client.on( "connected", ( addr, port ) => {
 
 let speaking = false;
 let queue = [];
-const speak = ( message, userId, speaker, _rate = 1 ) => {
+const speak = ( message, userId, speaker = "alex", _rate = 1 ) => {
   let voice = speaker;
   let rate = _rate;
   if ( userId ) {
