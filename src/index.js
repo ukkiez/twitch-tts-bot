@@ -144,10 +144,6 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
-  // if !bop UKZ print "learn sockboost"
-  // if !bob UKZ print "try downhill"
-  // if(bop hgt) print "just choose a level"
-  // if( bop ukkiez) print "ukkiez cannot be bopped"
   if ( message === "!dum" ) {
     say.speak( "[[volm 0.8]] dum dum de dum dum de dum de dum de dum", "bad news" );
     setTimeout( () => {
