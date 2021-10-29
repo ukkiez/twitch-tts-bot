@@ -52,9 +52,9 @@ client.on( "connected", ( addr, port ) => {
 
 let speaking = false;
 let queue = [];
-const speak = ( message, userId, speaker ) => {
+const speak = ( message, userId, speaker, _rate = 1 ) => {
   let voice = speaker;
-  let rate = 1;
+  let rate = _rate;
   if ( userId ) {
     ( { voice = "alex", rate = 1 } = preferencesByUserId[ userId ] || {} );
   }
@@ -131,6 +131,31 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  // if !bop UKZ print "learn sockboost"
+  // if !bob UKZ print "try downhill"
+  // if(bop hgt) print "just choose a level"
+  // if( bop ukkiez) print "ukkiez cannot be bopped"
+  if ( message === "!dum" ) {
+    say.speak( "[[volm 0.8]] dum dum de dum dum de dum de dum de dum", "bad news" );
+    setTimeout( () => {
+      say.speak( "[[volm 0.8]] dum dum de dum dum de dum de dum de dum", "bad news" );
+    }, 150 );
+    return;
+  }
+
+  if ( message === "!la" ) {
+    say.speak( "[[volm 0.8]] la la la la li la la la la la li la la", "good news" );
+    setTimeout( () => {
+      say.speak( "[[volm 0.8]] la la la la li la la la la la li la la", "good news" );
+    }, 150 );
+    return;
+  }
+
+  if ( message === "!albert" ) {
+    speak( "albert is love, albert is laif", null, "whisper" );
+    return;
+  }
+
   if ( message === "!hgt" ) {
     client.say( target, `@${ context[ "display-name" ] } Fetching HGT bop data...` );
     speak( "Fetching HGT bop data", null, "fiona" );
@@ -168,7 +193,7 @@ client.on( "message", ( target, context, message, self ) => {
         speak( "Hgt doesn't have a Any percent top 10 left LMAOOOOOOOO", null, "hysterical" );
       }
 
-      speak( "go get him, boys, you can do it, I believe in you", null, "Luca" );
+      speak( "go get him, boys, you can do it, I believe in you", null, randomElement( voices, "speaker" ) );
     } );
 
     return;
@@ -211,9 +236,14 @@ client.on( "message", ( target, context, message, self ) => {
         speak( "Monkley doesn't have a Any percent top 10 left LMAOOOOOOOO", null, "hysterical" );
       }
 
-      speak( "go get him, boys, you can do it, I believe in you", null, "Luca" );
+      speak( "go get him, boys, you can do it, I believe in you", null, randomElement( voices, "speaker" ) );
     } );
 
+    return;
+  }
+
+  if ( message === "duck" ) {
+    speak( "Duck? More like cuck, LMAO. Split keyboard intensifies", null, "Lekha" );
     return;
   }
 
