@@ -12,6 +12,8 @@ const { voices, rates } = require( "./data.js" );
 
 const getBop = require( "./bop.js" );
 
+const ukkiez = require( "./god.js" );
+
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
   localesBySpeaker.set( speaker.toLowerCase(), locale );
@@ -128,6 +130,17 @@ client.on( "message", ( target, context, message, self ) => {
 
   if ( message === "!ukkiez" ) {
     speak( "FrankerZ FrankerZ FrankerZ", null, "albert" );
+    return;
+  }
+
+  if ( message.startsWith( "!bop" ) ) {
+    const [ , person ] = message.split( /\s/ );
+
+    if ( person === "ukkiez" ) {
+      const choice = randomElement( ukkiez );
+      client.say( target, `@${ context[ "display-name" ] } ${ choice }` );
+      speak( choice, null, "claire" );
+    }
     return;
   }
 
