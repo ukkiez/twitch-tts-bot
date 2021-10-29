@@ -9,6 +9,8 @@
   "author": "Ukkiez",
   "license": "ISC",
   "dependencies": {
+    "async--await": "^1.0.2",
+    "http": "^0.0.1-security",
     "say": "^0.16.0",
     "tmi.js": "^1.8.5"
   }

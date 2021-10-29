@@ -3,10 +3,14 @@ const say = require( "say" );
 
 const fs = require( "fs" );
 
+const fetch = require( "./fetch.js" );
+
 const { username, password, channels } = require( "../config.json" );
 const preferencesByUserId = require( "../preferences.json");
 
 const { voices, rates } = require( "./data.js" );
+
+const getBop = require( "./bop.js" );
 
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
@@ -122,8 +126,120 @@ client.on( "message", ( target, context, message, self ) => {
 
   message = message.trim().toLowerCase();
 
+  if ( message === "!ukkiez" ) {
+    speak( "FrankerZ FrankerZ FrankerZ", null, "albert" );
+    return;
+  }
+
+  if ( message === "!hgt" ) {
+    client.say( target, `@${ context[ "display-name" ] } Fetching HGT bop data...` );
+    speak( "Fetching HGT bop data", null, "fiona" );
+
+    fetch( "dustkid.com", "/json/profile/328806/hgt/all", ( data ) => {
+      const boppableRank = getBop( JSON.parse( data ) );
+
+      if ( !boppableRank.ss && mostBoppableRanks.ss.length ) {
+        boppableRank.ss = mostBoppableRanks.ss.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
+      }
+      if ( !boppableRank.anypercent && mostBoppableRanks.anypercent.length ) {
+        boppableRank.anypercent = mostBoppableRanks.anypercent.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
+      }
+
+      if ( !boppableRank.ss && !boppableRank.anypercent ) {
+        client.say( target, "Hgt has no top tens left OMEGALUL" );
+        speak( "Hgt has no top tens left OMEGALUL, WE DID IT BOYS!!!", null, "good_news" );
+        return;
+      }
+
+      const { ss, anypercent } = boppableRank;
+      if ( ss ) {
+        client.say( target, `Easiest SS bop is ${ ss.levelname } (rank ${ ss.rank+1 }): http://dustkid.com/level/${ ss.level }` );
+      }
+      else {
+        client.say( target, "Hgt doesn't have any SS top 10s left widePoog" );
+        speak( "No SS top tens xDDDDDDD", null, "good_news" );
+      }
+
+      if ( anypercent ) {
+        client.say( target, `Easiest Any% bop is ${ anypercent.levelname } (rank ${ anypercent.rank+1 }): http://dustkid.com/level/${ anypercent.level }` );
+      }
+      else {
+        client.say( target, "Hgt doesn't have a Any% top 10 left KEKW" );
+        speak( "Hgt doesn't have a Any percent top 10 left LMAOOOOOOOO", null, "hysterical" );
+      }
+
+      speak( "go get him, boys, you can do it, I believe in you", null, "Luca" );
+    } );
+
+    return;
+  }
+
+  if ( message === "!monkley" ) {
+    client.say( target, `@${ context[ "display-name" ] } Fetching Monkley bop data...` );
+    speak( "Fetching Monkley bop data", null, "fiona" );
+
+    fetch( "dustkid.com", "/json/profile/288455/Monkley/all", ( data ) => {
+      const boppableRank = getBop( JSON.parse( data ) );
+
+      if ( !boppableRank.ss && mostBoppableRanks.ss.length ) {
+        boppableRank.ss = mostBoppableRanks.ss.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
+      }
+      if ( !boppableRank.anypercent && mostBoppableRanks.anypercent.length ) {
+        boppableRank.anypercent = mostBoppableRanks.anypercent.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
+      }
+
+      if ( !boppableRank.ss && !boppableRank.anypercent ) {
+        client.say( target, "Monkley has no top tens left OMEGALUL" );
+        speak( "Monkley has no top tens left OMEGALUL, WE DID IT BOYS!!!", null, "good_news" );
+        return;
+      }
+
+      const { ss, anypercent } = boppableRank;
+      if ( ss ) {
+        client.say( target, `Easiest SS bop is ${ ss.levelname } (rank ${ ss.rank+1 }): http://dustkid.com/level/${ ss.level }` );
+      }
+      else {
+        client.say( target, "Monkley doesn't have any SS top 10s left widePoog" );
+        speak( "No SS top tens xDDDDDDD", null, "good_news" );
+      }
+
+      if ( anypercent ) {
+        client.say( target, `Easiest Any% bop is ${ anypercent.levelname } (rank ${ anypercent.rank+1 }): http://dustkid.com/level/${ anypercent.level }` );
+      }
+      else {
+        client.say( target, "Monkley doesn't have a Any% top 10 left KEKW" );
+        speak( "Monkley doesn't have a Any percent top 10 left LMAOOOOOOOO", null, "hysterical" );
+      }
+
+      speak( "go get him, boys, you can do it, I believe in you", null, "Luca" );
+    } );
+
+    return;
+  }
+
+  if ( ( message === "!lotus" ) || ( message === "!thefallinglotus" ) ) {
+    speak( "That jorf was sweet as", null, "lee" );
+    client.say( target, "https://www.youtube.com/watch?v=ZdVHZwI8pcA" );
+    return;
+  }
+
+  if ( ( message === "!holykau" ) || ( message === "!kau" )  ) {
+    client.say( target, "Wash your sins away: http://atlas.dustforce.com/9889/bearatyte, courtesy of the Church of The Holy Kau" );
+    return;
+  }
+
   if ( message === "!maybetta" ) {
     speak( "5 5 5 5 5", null, "luca" );
+    return;
+  }
+
+  if ( message === "!skyhawk" ) {
+    client.say( target, "https://www.twitch.tv/skyhawk033/clip/BlazingGracefulFloofVoteYea-YWmJfTyA9SjWnV9M" );
+    return;
+  }
+
+  if ( message === "!marksel" ) {
+    speak( "I didn't do it, I didn't cheat, I swear. I deed naht.", null );
     return;
   }
 
