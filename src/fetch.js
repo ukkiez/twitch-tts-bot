@@ -1,4 +1,4 @@
-const http = require("http");
+const http = require( "http" );
 
 const fetch = ( host, path, callback ) => {
   let data = "";

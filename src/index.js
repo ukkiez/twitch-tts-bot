@@ -1,18 +1,21 @@
-const tmi = require("tmi.js");
+const { client } = require( "./client.js" );
+
 const say = require( "say" );
 
 const fs = require( "fs" );
 
 const fetch = require( "./fetch.js" );
 
-const { username, password, channels } = require( "../config.json" );
+const { randomElement } = require( "./util.js" );
+
 const preferencesByUserId = require( "../preferences.json");
 
 const { voices, rates } = require( "./data.js" );
 
 const getBop = require( "./bop.js" );
+const getBopUkkiez = require( "./god.js" );
 
-const ukkiez = require( "./god.js" );
+require( "./map-idea-generator/index.js" );
 
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
@@ -23,34 +26,9 @@ const speakerList = voices.map( ( { speaker, locale } ) => {
   return `${ speaker } (${locale})`;
 } );
 
-// define configuration options
-const opts = {
-  identity: {
-    username,
-    password,
-  },
-  channels,
-};
-
 // prepending messages with this string allows us to control the volume (thank
 // god we finally managed to find someone mentioning this)
-const volume = "[[volm 0.8]] ";
-
-const randomElement = ( array, key ) => {
-  if ( key ) {
-    return array[ Math.floor( Math.random() * array.length ) ][ key ];
-  }
-
-  return array[ Math.floor( Math.random() * array.length ) ];
-};
-
-// create a client with our options
-const client = new tmi.client( opts );
-
-client.connect();
-client.on( "connected", ( addr, port ) => {
-  console.log( `* Connected to ${addr}:${port}` );
-} );
+const volume = "[[volm 0.4 ]] ";
 
 let speaking = false;
 let queue = [];
@@ -117,9 +95,22 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  const userName = context[ "display-name" ];
+  if ( userName.toLowerCase() === "nightbot" ) {
+    return;
+  }
+
   const { "user-id": userId } = context;
   if ( !userId ) {
     return;
+  }
+
+  if ( /^\!sr/i.test( message ) || /^\!songrequest/i.test( message ) ) {
+    return;
+  }
+
+  if ( /https?:\/\/[^\s]+/.test( message ) ) {
+    message = message.replace( /https?:\/\/[^\s]+/, "weblink" );
   }
 
   if ( !preferencesByUserId[ userId ] ) {
@@ -137,47 +128,34 @@ client.on( "message", ( target, context, message, self ) => {
     const [ , person ] = message.split( /\s/ );
 
     if ( person === "ukkiez" ) {
-      const choice = randomElement( ukkiez );
-      client.say( target, `@${ context[ "display-name" ] } ${ choice }` );
-      speak( choice, null, "claire" );
+      const bopText = getBopUkkiez( userName );
+      client.say( target, bopText );
+      speak( bopText, null, "claire" );
     }
     return;
   }
 
   if ( message === "!dum" ) {
-    say.speak( "[[volm 0.8]] dum dum de dum dum de dum de dum de dum", "bad news" );
-    setTimeout( () => {
-      say.speak( "[[volm 0.8]] dum dum de dum dum de dum de dum de dum", "bad news" );
-    }, 150 );
+    say.speak( "[[volm 0.4 ]] dum dum de dum dum de dum de dum de dum", "bad news" );
     return;
   }
 
   if ( message === "!la" ) {
-    say.speak( "[[volm 0.8]] la la la la li la la la la la li la la", "good news" );
-    setTimeout( () => {
-      say.speak( "[[volm 0.8]] la la la la li la la la la la li la la", "good news" );
-    }, 150 );
+    say.speak( "[[volm 0.4 ]] la la la la li la la la la la li la la", "good news" );
     return;
   }
 
   if ( message === "!albert" ) {
-    speak( "albert is love, albert is laif", null, "whisper" );
+    speak( "albert is love, albert is life", null, "whisper" );
     return;
   }
 
   if ( message === "!hgt" ) {
-    client.say( target, `@${ context[ "display-name" ] } Fetching HGT bop data...` );
+    client.say( target, `@${ userName } Fetching HGT bop data...` );
     speak( "Fetching HGT bop data", null, "fiona" );
 
     fetch( "dustkid.com", "/json/profile/328806/hgt/all", ( data ) => {
       const boppableRank = getBop( JSON.parse( data ) );
-
-      if ( !boppableRank.ss && mostBoppableRanks.ss.length ) {
-        boppableRank.ss = mostBoppableRanks.ss.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
-      }
-      if ( !boppableRank.anypercent && mostBoppableRanks.anypercent.length ) {
-        boppableRank.anypercent = mostBoppableRanks.anypercent.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
-      }
 
       if ( !boppableRank.ss && !boppableRank.anypercent ) {
         client.say( target, "Hgt has no top tens left OMEGALUL" );
@@ -187,7 +165,7 @@ client.on( "message", ( target, context, message, self ) => {
 
       const { ss, anypercent } = boppableRank;
       if ( ss ) {
-        client.say( target, `Easiest SS bop is ${ ss.levelname } (rank ${ ss.rank+1 }): http://dustkid.com/level/${ ss.level }` );
+        client.say( target, `@${ userName } Easiest Hgt SS bop is ${ ss.levelname } (rank ${ ss.rank+1 }): http://dustkid.com/level/${ ss.level }` );
       }
       else {
         client.say( target, "Hgt doesn't have any SS top 10s left widePoog" );
@@ -195,7 +173,7 @@ client.on( "message", ( target, context, message, self ) => {
       }
 
       if ( anypercent ) {
-        client.say( target, `Easiest Any% bop is ${ anypercent.levelname } (rank ${ anypercent.rank+1 }): http://dustkid.com/level/${ anypercent.level }` );
+        client.say( target, `@${ userName } Easiest Hgt Any% bop is ${ anypercent.levelname } (rank ${ anypercent.rank+1 }): http://dustkid.com/level/${ anypercent.level }` );
       }
       else {
         client.say( target, "Hgt doesn't have a Any% top 10 left KEKW" );
@@ -208,50 +186,7 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
-  if ( message === "!monkley" ) {
-    client.say( target, `@${ context[ "display-name" ] } Fetching Monkley bop data...` );
-    speak( "Fetching Monkley bop data", null, "fiona" );
-
-    fetch( "dustkid.com", "/json/profile/288455/Monkley/all", ( data ) => {
-      const boppableRank = getBop( JSON.parse( data ) );
-
-      if ( !boppableRank.ss && mostBoppableRanks.ss.length ) {
-        boppableRank.ss = mostBoppableRanks.ss.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
-      }
-      if ( !boppableRank.anypercent && mostBoppableRanks.anypercent.length ) {
-        boppableRank.anypercent = mostBoppableRanks.anypercent.sort( ( a, b ) => b.rank-a.rank )[ 0 ];
-      }
-
-      if ( !boppableRank.ss && !boppableRank.anypercent ) {
-        client.say( target, "Monkley has no top tens left OMEGALUL" );
-        speak( "Monkley has no top tens left OMEGALUL, WE DID IT BOYS!!!", null, "good_news" );
-        return;
-      }
-
-      const { ss, anypercent } = boppableRank;
-      if ( ss ) {
-        client.say( target, `Easiest SS bop is ${ ss.levelname } (rank ${ ss.rank+1 }): http://dustkid.com/level/${ ss.level }` );
-      }
-      else {
-        client.say( target, "Monkley doesn't have any SS top 10s left widePoog" );
-        speak( "No SS top tens xDDDDDDD", null, "good_news" );
-      }
-
-      if ( anypercent ) {
-        client.say( target, `Easiest Any% bop is ${ anypercent.levelname } (rank ${ anypercent.rank+1 }): http://dustkid.com/level/${ anypercent.level }` );
-      }
-      else {
-        client.say( target, "Monkley doesn't have a Any% top 10 left KEKW" );
-        speak( "Monkley doesn't have a Any percent top 10 left LMAOOOOOOOO", null, "hysterical" );
-      }
-
-      speak( "go get him, boys, you can do it, I believe in you", null, randomElement( voices, "speaker" ) );
-    } );
-
-    return;
-  }
-
-  if ( message === "duck" ) {
+  if ( message === "!duck" ) {
     speak( "Duck? More like cuck, LMAO. Split keyboard intensifies", null, "Lekha" );
     return;
   }
@@ -283,7 +218,7 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( ( message === "!repo" ) || ( message === "!bot" ) ) {
-    client.say( target, `@${ context[ "display-name" ] } See the code/download the bot here: https://github.com/ukkiez/twitch-tts-bot` );
+    client.say( target, `@${ userName } See the code/download the bot here: https://github.com/ukkiez/twitch-tts-bot` );
   }
 
   if ( message === "!voices" ) {
@@ -293,19 +228,19 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( message === "!voice" ) {
-    client.say( target, `@${ context[ "display-name" ] } Use "!voice [speaker|locale] [speed]" to set your voice, see "!voices" for the full list FrankerZ` );
+    client.say( target, `@${ userName } Use "!voice [speaker|locale] [speed]" to set your voice, see "!voices" for the full list FrankerZ` );
     return;
   }
 
   if ( ( message === "!help" ) || ( message ==="!tts" ) ) {
-    client.say( target, `@${ context[ "display-name" ] } "!voice [speaker|locale] [speed]" | "!currentvoice" | "!randomvoice" | "!voices" | See the "About" section below strim for more LilZ` );
+    client.say( target, `@${ userName } "!voice [speaker|locale] [speed]" | "!currentvoice" | "!randomvoice" | "!voices" | See the "About" section below strim for more LilZ` );
     return;
   }
 
   if ( ( message === "!currentvoice" ) || ( message === "!cv" ) ) {
     // have the bot reply with the user's current voice
     const { voice, rate } = preferencesByUserId[ userId ];
-    client.say( target, `@${ context[ "display-name" ] } Current voice: "${ voice } (${ localesBySpeaker.get( voice.toLowerCase() ) })" at ${ rate }x speed.` );
+    client.say( target, `@${ userName } Current voice: "${ voice } (${ localesBySpeaker.get( voice.toLowerCase() ) })" at ${ rate }x speed.` );
     return;
   }
 
@@ -324,7 +259,7 @@ client.on( "message", ( target, context, message, self ) => {
     const rate = randomElement( rates );
 
     saveUserPreference( userId, { voice, rate } );
-    speak( `${ context[ "display-name" ] } set their voice to ${ voice }`, userId );
+    speak( `${ userName } set their voice to ${ voice }`, userId );
     return;
   }
   else if ( message.startsWith( "!voice" ) ) {
@@ -349,14 +284,16 @@ client.on( "message", ( target, context, message, self ) => {
     } );
 
     if ( !matchedVoice || ( matchedVoice === -1 ) ) {
-      client.say( target, `@${ context[ "display-name" ] } I don't know what voice that is FrankerZ` );
+      client.say( target, `@${ userName } I don't know what voice that is FrankerZ` );
       return;
     }
 
     saveUserPreference( userId, { voice: matchedVoice.speaker, rate } );
-    speak( `${ context[ "display-name" ] } set their voice to ${ matchedVoice.speaker }`, userId );
+    speak( `${ userName } set their voice to ${ matchedVoice.speaker }`, userId );
     return;
   }
 
   speak( message, userId );
 } );
+
+module.exports = { speak };
