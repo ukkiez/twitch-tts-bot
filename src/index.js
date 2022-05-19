@@ -27,6 +27,16 @@ const speakerList = voices.map( ( { speaker, locale } ) => {
 // god we finally managed to find someone mentioning this)
 const volume = "[[volm 0.4 ]] ";
 
+const getRandomVoice = ( voice ) => {
+  const _voice = randomElement( voices, "speaker" );
+  if ( _voice === voice ) {
+    getRandomVoice( voice );
+  }
+  else {
+    return _voice;
+  }
+}
+
 let speaking = false;
 let queue = [];
 const speak = ( message, userId, speaker = "alex", _rate = 1 ) => {
@@ -103,6 +113,37 @@ client.on( "message", ( target, context, message, self ) => {
 
   const { "user-id": userId } = context;
   if ( !userId ) {
+    return;
+  }
+
+  if ( context[ "custom-reward-id" ] === "064667d5-71be-425a-9c9f-3dbea70957d1" ) {
+    // time the user out when they redeem the "timeout self" channel point
+    // reward
+    client.say( target, "/timeout " + context[ "display-name" ] + " 1" );
+    client.say( target, "get shit on" );
+    speak( "Get shit on.", null, getRandomVoice() );
+    return;
+  }
+
+  if ( context[ "custom-reward-id" ] === "8c181bea-3544-495d-b916-705854d3f551" ) {
+    // time the user out themselves when they redeem the "timeout someone else"
+    // channel point reward and add "me" or "myself" as a message
+    if ( ( message === "me" ) || ( message === "myself" ) ) {
+      client.say( target, "/timeout " + context[ "display-name" ] + " 60" );
+      client.say( target, "Could have just redeemed \"timeout self\", but sure, here's 60 seconds ¯\\_(ツ)_/¯" );
+      speak( "Could have just redeemed \"timeout self\", but sure, here is 60 seconds.", null, getRandomVoice() );
+    }
+    return;
+  }
+
+  if ( context[ "custom-reward-id" ] === "9afbf27b-5eff-4d86-939a-4cae520d29d8" ) {
+    // mod the user out themselves when they redeem the "mod" channel point
+    // reward and add "me" or "myself" as a message
+    if ( ( message === "me" ) || ( message === "myself" ) ) {
+      client.say( target, "/mod " + context[ "display-name" ] );
+      client.say( target, "Welcome, you narcissist LilZ" );
+      speak( "Welcome, you narcissist.", null, getRandomVoice() );
+    }
     return;
   }
 
@@ -200,6 +241,7 @@ client.on( "message", ( target, context, message, self ) => {
 
   if ( ( message === "!holykau" ) || ( message === "!kau" )  ) {
     client.say( target, "Wash your sins away: http://atlas.dustforce.com/9889/bearatyte, courtesy of the Church of The Holy Kau" );
+    speak( "Wash your sins away. Courtesy of the Church of The Holy Kau.", null, getRandomVoice() );
     return;
   }
 
@@ -214,7 +256,7 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( message === "!marksel" ) {
-    speak( "I didn't do it, I didn't cheat, I swear. I deed naht.", null );
+    speak( "I didn't do it, I didn't cheat, I swear. I deed naht.", null, "Rishi" );
     return;
   }
 
@@ -247,16 +289,7 @@ client.on( "message", ( target, context, message, self ) => {
 
   if ( ( message === "!voice random" ) || ( message === "!randomvoice" ) || ( message === "!random" ) || ( message === "!rv" ) ) {
     // give the user a random voice
-    const getRandomVoice = ( voice ) => {
-      const _voice = randomElement( voices, "speaker" );
-      if ( _voice === voice ) {
-        getRandomVoice( voice );
-      }
-      else {
-        return _voice;
-      }
-    }
-    const voice = randomElement( voices, "speaker" );
+    const voice = getRandomVoice( preferencesByUserId[ userId ]?.voice );
     const rate = randomElement( rates );
 
     saveUserPreference( userId, { voice, rate } );
@@ -277,15 +310,21 @@ client.on( "message", ( target, context, message, self ) => {
     }
 
     const matchedVoice = voices.find( ( { speaker, locale } ) => {
-      if ( ( speaker.toLowerCase() === voice ) || ( locale.toLowerCase() === voice ) ) {
-        // try to match both speaker names and their given locales; for locales
-        // just pick the first voice we can find
+      // try to match either speaker names or (part of) the given locale; for
+      // locales just pick the first voice we can find
+
+      if ( speaker.toLowerCase() === voice ) {
+        return true;
+      }
+
+      const parts = locale.split( "_" );
+      if ( ( parts[ 0 ]?.toLowerCase() === voice ) || ( parts[ 1 ]?.toLowerCase() === voice ) ) {
         return true;
       }
     } );
 
     if ( !matchedVoice || ( matchedVoice === -1 ) ) {
-      client.say( target, `@${ userName } I don't know what voice that is FrankerZ` );
+      client.say( target, `@${ userName } Not sure what voice that is ZrehplaR ?` );
       return;
     }
 
