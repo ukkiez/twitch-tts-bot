@@ -22,6 +22,16 @@ const _inputsByCommandKey = {
   fh: "fh",
 
   dashjump: "dashJump",
+
+  light: "l",
+  ul: "ul",
+  l: "l",
+  dl: "dl",
+
+  heavy: "h",
+  uh: "uh",
+  h: "h",
+  dh: "dh",
 }
 const inputsByCommandKey = new Map( Object.entries( _inputsByCommandKey ) );
 
@@ -32,6 +42,14 @@ const commandCheckList = [
   "jump",
   "sh",
   "fh",
+
+  "light",
+  "ul",
+  "dl",
+
+  "heavy",
+  "uh",
+  "dh",
 ];
 // sort the checklist specifically so that longer strings are checked earlier
 // than others, reason is that e.g. we want to check "downdash" before "dash",
