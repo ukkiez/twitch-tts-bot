@@ -38,6 +38,6 @@ client.on( "message", ( target, context, message, self ) => {
   // const isBroadcaster = context.badges?.broadcaster;
 
   // if ( isBroadcaster ) {
-    parse( message );
+    // parse( message );
   // }
 } );
