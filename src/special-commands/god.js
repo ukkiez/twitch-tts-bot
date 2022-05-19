@@ -1,4 +1,4 @@
-const { randomElement } = require( "./util.js" );
+const { randomElement } = require( "../util.js" );
 
 const getBopUkkiez = ( userName ) => {
   const choices = [

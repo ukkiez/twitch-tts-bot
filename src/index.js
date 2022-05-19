@@ -12,6 +12,7 @@ const getBop = require( "./special-commands/bop.js" );
 const getBopUkkiez = require( "./special-commands/god.js" );
 
 require( "./map-idea-generator/index.js" );
+require( "./twitch-plays/index.js" );
 
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {

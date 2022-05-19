@@ -1,29 +1,37 @@
 const { inputs } = require( "./util/inputs.js" );
 
+const framesToMs = ( frames ) => {
+  if ( !frames && isNaN( frames ) ) {
+    return;
+  }
+
+  return Math.ceil( ( ( 1 / 60 ) * frames ) * 1000 );
+};
+
 const _inputsByCommandKey = {
   n: "up",
   e: "right",
   s: "down",
   w: "left",
 
-  // dash: "dash",
-  // downdash: "downDash",
+  dash: "dash",
+  downdash: "downDash",
 
-  // jump: "fh",
-  // sh: "sh",
-  // fh: "fh",
+  jump: "fh",
+  sh: "sh",
+  fh: "fh",
 
-  // dashjump: "dashJump",
+  dashjump: "dashJump",
 }
 const inputsByCommandKey = new Map( Object.entries( _inputsByCommandKey ) );
 
 const commandCheckList = [
-  // "dash",
-  // "downdash",
+  "dash",
+  "downdash",
 
-  // "jump",
-  // "sh",
-  // "fh",
+  "jump",
+  "sh",
+  "fh",
 ];
 // sort the checklist specifically so that longer strings are checked earlier
 // than others, reason is that e.g. we want to check "downdash" before "dash",
@@ -33,10 +41,8 @@ commandCheckList.sort( function( a, b ) {
   return ( b.length - a.length );
 } );
 
-const getCommands = ( message ) => {
-  message = message.trim();
-
-  const commands = [];
+const parseMessage = ( message, _commands ) => {
+  const commands = _commands || [];
 
   // first start getting commands from the checklist, and removing those parts
   // from the message (e.g. remove "downdash", then "jump", etc.)
@@ -44,6 +50,7 @@ const getCommands = ( message ) => {
     const command = {
       key: undefined,
       hold: false,
+      delay: undefined,
     };
 
     if ( !message.includes( check ) ) {
@@ -66,10 +73,19 @@ const getCommands = ( message ) => {
       // check if someone accidentally put a symbol (like "-") after one of
       // these commands, and remove it if that's the case
       for ( let i = ( index + length ); i <= message.length - 1; i++ ) {
+        if ( message[ i ] === "+" ) {
+          command.delay = framesToMs( 15 );
+          length++;
+          continue;
+        }
+
         if ( /[^\w]/.test( message[ i ] ) ) {
           // just increase the stored length, since we'll be removing up to and
           // including that part of the string below
           length++;
+        }
+        else {
+          break;
         }
       }
     }
@@ -79,15 +95,28 @@ const getCommands = ( message ) => {
 
     if ( !message ) {
       // we've already parsed the complete message
-      return commands;
+      return { message, commands };
+    }
+    else {
+      return parseMessage( message, commands );
     }
   }
+
+  return { message, commands };
+}
+
+const getCommands = ( message ) => {
+  message = message.trim();
+
+  let commands;
+  ( { message, commands } = parseMessage( message ) );
 
   const data = Array.from( message );
   for ( let i = 0; i <= data.length - 1; i++ ) {
     const command = {
       key: undefined,
       hold: false,
+      delay: undefined,
     };
 
     const char = data[ i ];
@@ -118,8 +147,18 @@ const getCommands = ( message ) => {
   return commands;
 }
 
-const exec = ( command, hold ) => {
-  inputs[ inputsByCommandKey[ command ] ]( hold );
+const exec = async ( commands ) => {
+  // const held = commands.filter( ( { hold } ) => hold );
+  // const tapped = commands.filter( ( { hold } ) => !hold );
+
+  for ( const { key, hold, delay } of commands ) {
+    if ( !inputs[ inputsByCommandKey.get( key ) ] ) {
+      throw new Error( `Unknown command "${ inputsByCommandKey.get( key ) }".` );
+    }
+
+    inputs[ inputsByCommandKey.get( key ) ]( hold );
+    await inputs.sleep( delay );
+  }
 }
 
 const parse = ( message ) => {
@@ -130,6 +169,8 @@ const parse = ( message ) => {
   if ( !commands.length ) {
     return;
   }
+
+  exec( commands );
 };
 
 module.exports = { parse };

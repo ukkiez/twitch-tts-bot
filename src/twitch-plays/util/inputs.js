@@ -7,38 +7,42 @@ const { tap, hold, press } = require( "./key-control.js" );
 const { Up, Down, Left, Right, Z: _jump, X: _light, C: _heavy, B: _dash } = Key;
 
 const framesToMs = ( frames ) => {
+  if ( !frames && isNaN( frames ) ) {
+    return;
+  }
+
   return Math.ceil( ( ( 1 / 60 ) * frames ) * 1000 );
 };
 
 const inputs = {
+  sleep: async ( delay ) => {
+    await new Promise( r => setTimeout(() => r(), delay ) );
+  },
+
   // directionals
   left: ( hold ) => {
-    console.log( "left()", { hold } );
-    // press( hold, Left );
+    press( hold, Left );
   },
   right: ( hold ) => {
-    console.log( "right()", { hold } );
-    // press( hold, Right );
+    press( hold, Right );
   },
   up: ( hold ) => {
-    console.log( "up()", { hold } );
-    // press( hold, Up );
+    press( hold, Up );
   },
   down: ( hold ) => {
-    console.log( "down()", { hold } );
-    // press( hold, Down );
+    press( hold, Down );
   },
 
   // jumping
   sh: () => {
     tap( _jump );
   },
-  fh: () => {
-    press( true, _jump, framesToMs( 7 ) );
+  fh: ( hold, delay ) => {
+    press( true, _jump, framesToMs( 7 ), framesToMs( delay ) );
   },
 
-  dash: () => {
-    tap( _dash );
+  dash: ( hold, delay ) => {
+    tap( _dash, framesToMs( delay ) );
   },
 
   downDash: () => {
