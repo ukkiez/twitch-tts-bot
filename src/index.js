@@ -49,6 +49,10 @@ const speak = ( message, userId, speaker = "alex", _rate = 1 ) => {
     return;
   }
 
+  if ( !queue[ 0 ]?.message ) {
+    return;
+  }
+
   if ( !speaking ) {
     speaking = true;
     say.speak( ( volume + queue[ 0 ].message ), queue[ 0 ].voice, queue[ 0 ].rate, ( err ) => {
