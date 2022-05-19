@@ -28,15 +28,6 @@ const categories = [
   // e.g. no dash, directionless, low%, character-specific; should not occur
   // often
   "restriction",
-
-  // optional, should occur very infrequently
-  "script",
-
-  // optional, should occur very infrequently; format is "made for <audience>"
-  "audience",
-
-  // optional, should occur from time to time; format is "with the purpose of <purpose>"
-  "purpose"
 ];
 
 const templates = [
@@ -50,12 +41,12 @@ const templates = [
   "A @main_type map, featuring @amount @enemy, @enemy, and @amount @enemy.",
   "A @main_type map, featuring @enemy, @descriptor @enemy, @enemy, and @amount @enemy.",
 
-  "A @visual_theme map about @literary_theme, featuring @amount @descriptor @enemy, made for @purpose.",
+  "A @visual_theme map about @literary_theme, featuring @amount @descriptor @enemy, with @restriction",
 
   "A @visual_theme map with @descriptor @enemy, with @restriction.",
   "A @visual_theme map with @descriptor @enemy and @amount @feature, with @restriction.",
-  "A @visual_theme map with @descriptor @enemy, with @restriction, made for @audience.",
-  "A @visual_theme map, featuring @feature and @descriptor @enemy, with @restriction, made for @audience.",
+  "A @visual_theme map with @amount @descriptor @enemy, with @restriction.",
+  "A @visual_theme map, featuring @feature and @descriptor @enemy, with @restriction.",
 
   "A @visual_theme map with a @colour_scheme colour theme, with @restriction.",
   "A @visual_theme map about @literary_theme, with @restriction and @restriction.",
@@ -370,29 +361,6 @@ a terrible custom music track
 default camera
 a very zoomed-in camera
 a very zoomed-out camera
-#end
-
------------------------------- SCRIPTING ------------------------------
-#script
-
------------------------------- TARGET AUDIENCE ------------------------------
-#audience
-noobs
-good players
-masochists
-furries
-weebs
-nerds
-a community member
-boomers
-#end
-
------------------------------- PURPOSE ------------------------------
-#purpose
-relaxation
-causing joy and happiness
-causing depression
-the memes
 #end
 `;
 

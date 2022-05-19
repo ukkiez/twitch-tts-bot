@@ -1,19 +1,15 @@
-const { client } = require( "./client.js" );
-
 const say = require( "say" );
-
 const fs = require( "fs" );
 
-const fetch = require( "./fetch.js" );
-
-const { randomElement } = require( "./util.js" );
+const { client } = require( "./client.js" );
 
 const preferencesByUserId = require( "../preferences.json");
-
 const { voices, rates } = require( "./data.js" );
 
-const getBop = require( "./bop.js" );
-const getBopUkkiez = require( "./god.js" );
+const { randomElement, fetch } = require( "./util.js" );
+
+const getBop = require( "./special-commands/bop.js" );
+const getBopUkkiez = require( "./special-commands/god.js" );
 
 require( "./map-idea-generator/index.js" );
 

@@ -5,7 +5,7 @@ const { rE, replaceInString, titleCase } = require( "./util.js" );
 
 const generateMapIdea = ( numberOfIdeas ) => {
   const result = [];
-  for ( let i = 0; i <= numberOfIdeas; i++ ) {
+  for ( let i = 1; i <= numberOfIdeas; i++ ) {
     let map = rE( templates );
     let _ideasByCategory = new Map();
     for ( const [ category ] of map.matchAll( /@\w+/g ) ) {
@@ -59,7 +59,17 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( message.startsWith( "!map" ) || message.startsWith( "!idea" ) ) {
-    client.say( target, `@${ userName } ${ generateMapIdea( 1 )[ 0 ] }` );
+    let number = parseInt( message.split( " " )[ 1 ], 10 ) || 1;
+
+    if ( number > 5 ) {
+      number = 5;
+    }
+
+    let clientMessage = `@${ userName }`;
+    for ( const idea of generateMapIdea( number ) ) {
+      clientMessage += " | " + idea;
+    }
+    client.say( target, clientMessage );
   }
 } );
 

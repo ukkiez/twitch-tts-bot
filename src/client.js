@@ -1,4 +1,4 @@
-const tmi = require("tmi.js");
+const tmi = require( "tmi.js" );
 
 const { username, password, channels } = require( "../config.json" );
 
