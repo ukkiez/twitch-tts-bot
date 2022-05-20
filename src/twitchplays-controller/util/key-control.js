@@ -3,6 +3,8 @@ const { Up, Down, Left, Right, Z: _jump, X: _light, C: _heavy, B: _dash } = Key;
 
 keyboard.config.autoDelayMs = 33;
 
+const sleep = async ( ms ) => new Promise( r => setTimeout( () => r(), ms ) );
+
 // keep track of which keys are currently held, so that if for example Left is
 // being held, if someone wants to go Right we need to first release Left
 const heldKeys = {};
@@ -49,10 +51,12 @@ const tap = async ( keys, delay ) => {
   }
 
   if ( delay ) {
-    setTimeout( async () => {
-      await Promise.all( keys.map( key => keyboard.pressKey( key ) ) );
-      await Promise.all( keys.map( key => release( key ) ) );
-    }, delay );
+    for ( const key of keys ) {
+      await keyboard.pressKey( key );
+      await release( key );
+
+      await sleep( delay );
+    }
   }
   else {
     await Promise.all( keys.map( key => keyboard.pressKey( key ) ) );

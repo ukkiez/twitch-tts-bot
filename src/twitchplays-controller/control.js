@@ -221,11 +221,16 @@ const parseMessage = ( message ) => {
   return commands;
 }
 
-const exec = async ( commands ) => {
+const exec = async ( commands, restart ) => {
+  if ( restart ) {
+    inputs.restart();
+    return;
+  }
+
   for ( const { key, hold, delay } of commands ) {
     const input = inputsByCommandKey.get( key );
     if ( !inputs[ input ] ) {
-      console.error( `Unknown input "${ input } (key: ${ key }".` );
+      console.error( `Unknown input "${ input } (key: ${ key })".` );
     }
 
     inputs[ input ]( hold );
@@ -248,7 +253,7 @@ const parse = ( message ) => {
 };
 
 const restart = () => {
-  exec( [ { key: "restart" } ] );
+  exec( [], true );
 }
 
 module.exports = { parse, restart };
