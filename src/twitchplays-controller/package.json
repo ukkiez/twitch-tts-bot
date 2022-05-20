@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@nut-tree/nut-js": "^2.1.0",
+    "node-global-key-listener": "^0.1.1"
+  },
+  "name": "df-twitchplays-controller",
+  "version": "1.0.0",
+  "description": "Parses messages, and identifies Dustforce-specific commands from them. Subsequently sends these commands to the system keyboard.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ukkiez/df-twitchplays-controller.git"
+  },
+  "keywords": [
+    "dustforce",
+    "twitchplays"
+  ],
+  "author": "Ukkiez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ukkiez/df-twitchplays-controller/issues"
+  },
+  "homepage": "https://github.com/ukkiez/df-twitchplays-controller#readme"
+}

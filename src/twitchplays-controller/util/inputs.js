@@ -38,6 +38,8 @@ const inputs = {
     tap( _jump );
   },
   fh: ( hold, delay ) => {
+    // hold for 7 frames to make sure we hold throughout the jumpsquat animation
+    // for a full hop
     press( true, _jump, framesToMs( 7 ), framesToMs( delay ) );
   },
 
