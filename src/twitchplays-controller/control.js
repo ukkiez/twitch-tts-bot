@@ -10,6 +10,9 @@ const framesToMs = ( frames ) => {
 
 const defaultDelay = framesToMs( 15 );
 
+// add a special delay for dashing, to allow for (hopefully) better boosting
+const dashDelay = framesToMs( 13 );
+
 const _inputsByCommandKey = {
   n: "up",
   e: "right",
@@ -90,7 +93,13 @@ const parseMessage = ( message ) => {
       }
 
       if ( character === "+" ) {
-        _lastCommand.delay += defaultDelay;
+        if ( _lastCommand.key === "dash" ) {
+          _lastCommand.delay += dashDelay;
+        }
+        else {
+          _lastCommand.delay += defaultDelay;
+        }
+
       }
       else if ( character === "-" ) {
         _lastCommand.hold = true;
