@@ -7,12 +7,41 @@ keyboard.config.autoDelayMs = 33;
 // being held, if someone wants to go Right we need to first release Left
 const heldKeys = {};
 
-const oppositeDirection = {
+const allKeys = [ Up, Down, Left, Right, _jump, _light, _heavy, _dash ];
+
+const directions = [ Up, Down, Left, Right ];
+
+const blockingKeys = {
   [ Left ]: Right,
   [ Right ]: Left,
   [ Up ]: Down,
   [ Down ]: Up,
 };
+
+const release = async ( key ) => {
+  await keyboard.releaseKey( key );
+
+  heldKeys[ key ] = false;
+}
+
+const releaseAll = async ( _directionsOnly ) => {
+  let keys;
+  if ( _directionsOnly ) {
+    keys = [ ...directions ];
+  }
+  else {
+    keys = Object.keys( heldKeys );
+  }
+
+  // only try to release already held keys
+  keys = keys.filter( key => heldKeys[ key ] );
+
+  await Promise.all( keys.map( key => release( key ) ) );
+
+  for ( const key of keys ) {
+    heldKeys[ key ] = false;
+  }
+}
 
 const tap = async ( keys, delay ) => {
   if ( !Array.isArray( keys ) ) {
@@ -22,12 +51,12 @@ const tap = async ( keys, delay ) => {
   if ( delay ) {
     setTimeout( async () => {
       await Promise.all( keys.map( key => keyboard.pressKey( key ) ) );
-      await Promise.all( keys.map( key => keyboard.releaseKey( key ) ) );
+      await Promise.all( keys.map( key => release( key ) ) );
     }, delay );
   }
   else {
     await Promise.all( keys.map( key => keyboard.pressKey( key ) ) );
-    await Promise.all( keys.map( key => keyboard.releaseKey( key ) ) );
+    await Promise.all( keys.map( key => release( key ) ) );
   }
 }
 
@@ -38,7 +67,7 @@ const hold = async ( keys, duration, delay ) => {
 
       if ( duration ) {
         setTimeout( async () => {
-          await Promise.all( keys.map( key => keyboard.releaseKey( key ) ) );
+          await Promise.all( keys.map( key => release( key ) ) );
         }, duration );
       }
     }, delay );
@@ -48,39 +77,53 @@ const hold = async ( keys, duration, delay ) => {
 
     if ( duration ) {
       setTimeout( async () => {
-        await Promise.all( keys.map( key => keyboard.releaseKey( key ) ) );
+        await Promise.all( keys.map( key => release( key ) ) );
       }, duration );
     }
   }
 };
 
-const press = ( _hold, keys, duration, delay ) => {
+const press = async ( _hold, keys, duration, delay ) => {
   if ( !Array.isArray( keys ) ) {
     keys = [ keys ];
   }
 
-  for ( const key of [ Up, Down, Left, Right ] ) {
-    const opposite = oppositeDirection[ key ];
-    if ( !heldKeys[ opposite ] ) {
-      continue;
+  const remainingKeys = [ ...keys ];
+  for ( const key of keys ) {
+    const blocker = blockingKeys[ key ];
+
+    if ( heldKeys[ key ] ) {
+      // this key is already being held
+      if ( _hold ) {
+        // continue holding the key, and just remove it from the array of keys
+        // that will be to be pressed
+        remainingKeys.splice( remainingKeys.indexOf( key ), 1 );
+      }
+      else {
+        // release the key to allow it to be tapped again afterwards
+        await release( key );
+      }
     }
 
-    if ( keys.includes( key ) ) {
-      tap( opposite );
-      heldKeys[ opposite ] = false;
+    if ( heldKeys[ blocker ] ) {
+      // some keys block other keys from their function (for example, a left
+      // cursor key being held blocks the right cursor key from having any
+      // effect), so if we want to tap/hold one of these keys we'll need to
+      // release the other
+      await release( blocker );
     }
   }
 
   if ( _hold ) {
-    hold( keys, duration, delay );
+    hold( remainingKeys, duration, delay );
 
-    keys.forEach( key => {
+    remainingKeys.forEach( key => {
       heldKeys[ key ] = true;
     } );
   }
   else {
-    tap( keys, delay );
+    tap( remainingKeys, delay );
   }
 }
 
-module.exports = { tap, hold, press };
+module.exports = { tap, hold, press, release, releaseAll };

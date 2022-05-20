@@ -1,6 +1,6 @@
 const { client, checkMessage } = require( "./client.js" );
 
-const { parse, killSwitch } = require( "./twitchplays-controller/index.js" );
+const { parse, restart, killSwitch } = require( "./twitchplays-controller/index.js" );
 
 const { speak, getRandomVoice } = require( "./index.js" );
 const { getUserLevel } = require( "./util.js" );
@@ -19,7 +19,7 @@ client.on( "message", ( target, context, message, self ) => {
     return false;
   }
 
-  const { broadcaster } = getUserLevel( context );
+  const { broadcaster, notPleb } = getUserLevel( context );
   if ( broadcaster ) {
     if ( message === "!twitchplays" ) {
       _twitchPlays = !_twitchPlays;
@@ -47,6 +47,15 @@ client.on( "message", ( target, context, message, self ) => {
   }
 
   if ( _twitchPlays ) {
+    if ( notPleb ) {
+      if ( message === "!restart" ) {
+        restart();
+        client.say( target, "had to restart map? xD" );
+        speak( "had to restart map? xD", null, getRandomVoice() );
+        return;
+      }
+    }
+
     parse( message );
   }
 } );

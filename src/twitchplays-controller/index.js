@@ -20,6 +20,7 @@ const killSwitch = ( key, removeListener ) => {
 
 const {
   parse,
+  restart,
 } = require( "./control.js" );
 
-module.exports = { parse, killSwitch };
+module.exports = { parse, restart, killSwitch };

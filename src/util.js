@@ -30,7 +30,7 @@ const getUserLevel = ( context ) => {
     broadcaster,
     mod,
 
-    isNotPleb: ( broadcaster || mod ),
+    notPleb: ( broadcaster || mod ),
   }
 }
 

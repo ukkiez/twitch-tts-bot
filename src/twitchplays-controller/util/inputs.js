@@ -2,9 +2,9 @@ const { keyboard, Key } = require( "@nut-tree/nut-js" );
 
 keyboard.config.autoDelayMs = 33;
 
-const { tap, hold, press } = require( "./key-control.js" );
+const { tap, hold, press, releaseAll } = require( "./key-control.js" );
 
-const { Up, Down, Left, Right, Z: _jump, X: _light, C: _heavy, B: _dash } = Key;
+const { Up, Down, Left, Right, Z: _jump, X: _light, C: _heavy, B: _dash, R } = Key;
 
 const framesToMs = ( frames ) => {
   if ( !frames && isNaN( frames ) ) {
@@ -17,6 +17,20 @@ const framesToMs = ( frames ) => {
 const inputs = {
   sleep: async ( delay ) => {
     await new Promise( r => setTimeout(() => r(), delay ) );
+  },
+
+  neutral: () => {
+    releaseAll( true );
+  },
+
+  releaseAll: () => {
+    releaseAll();
+  },
+
+  restart: () => {
+    // restart the map
+    tap( [ R, R ], framesToMs( 10 ) );
+    releaseAll();
   },
 
   // directionals
