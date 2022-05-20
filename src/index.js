@@ -11,9 +11,6 @@ const { randomElement, fetch } = require( "./util.js" );
 const getBop = require( "./special-commands/bop.js" );
 const getBopUkkiez = require( "./special-commands/god.js" );
 
-require( "./map-idea-generator/index.js" );
-require( "./twitch-plays.js" );
-
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
   localesBySpeaker.set( speaker.toLowerCase(), locale );
@@ -322,3 +319,6 @@ client.on( "message", ( target, context, message, self ) => {
 } );
 
 module.exports = { speak, getRandomVoice };
+
+require( "./map-idea-generator/index.js" );
+require( "./twitch-plays.js" );
