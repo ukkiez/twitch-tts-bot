@@ -19,8 +19,8 @@ const _inputsByCommandKey = {
   dash: "dash",
   downdash: "downDash",
 
-  jump: "fh",
-  j: "fh",
+  jump: "jump",
+  j: "jump",
   sh: "sh",
   fh: "fh",
 

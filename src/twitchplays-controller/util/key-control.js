@@ -30,7 +30,7 @@ const releaseAll = async ( _directionsOnly ) => {
     keys = [ ...directions ];
   }
   else {
-    keys = Object.keys( heldKeys );
+    keys = Object.keys( heldKeys ).map( key => parseInt( key, 10 ) );
   }
 
   // only try to release already held keys

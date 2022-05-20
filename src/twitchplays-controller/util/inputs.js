@@ -51,14 +51,24 @@ const inputs = {
   sh: () => {
     tap( _jump );
   },
-  fh: ( hold, delay ) => {
+  fh: ( hold ) => {
     // hold for 7 frames to make sure we hold throughout the jumpsquat animation
     // for a full hop
-    press( true, _jump, framesToMs( 7 ), framesToMs( delay ) );
+    press( true, _jump, framesToMs( 7 ) );
+  },
+  jump: ( hold ) => {
+    if ( !hold ) {
+      // hold for at least 7 frames to hold throughout jumpsquat animation for a
+      // full hop
+      press( true, _jump, framesToMs( 7 ) );
+    }
+    else {
+      press( true, _jump );
+    }
   },
 
-  dash: ( hold, delay ) => {
-    tap( _dash, framesToMs( delay ) );
+  dash: () => {
+    tap( _dash );
   },
 
   downDash: () => {
@@ -66,29 +76,29 @@ const inputs = {
   },
 
   // uplight
-  ul: () => {
-    tap( [ Up, _light ] );
+  ul: ( hold ) => {
+    press( hold, [ Up, _light ] );
   },
   // light attack
-  l: () => {
-    tap( _light );
+  l: ( hold ) => {
+    press( hold, _light );
   },
   // downlight
-  dl: () => {
-    tap( [ Down, _light ] );
+  dl: ( hold ) => {
+    press( hold, [ Down, _light ] );
   },
 
   // upheavy
-  uh: () => {
-    tap( [ Up, _heavy ] );
+  uh: ( hold ) => {
+    press( hold, [ Up, _heavy ] );
   },
   // heavy attack
-  h: () => {
-    tap( _heavy );
+  h: ( hold ) => {
+    press( hold, _heavy );
   },
   // downheavy
-  dh: () => {
-    tap( [ Down, _heavy ] );
+  dh: ( hold ) => {
+    press( hold, [ Down, _heavy ] );
   },
 
   // special

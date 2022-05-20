@@ -21,7 +21,7 @@ client.on( "message", ( target, context, message, self ) => {
 
   const { broadcaster, notPleb } = getUserLevel( context );
   if ( broadcaster ) {
-    if ( message === "!twitchplays" ) {
+    if ( [ "!twitchplays", "!tp" ].includes( message ) ) {
       _twitchPlays = !_twitchPlays;
 
       if ( _twitchPlays ) {
