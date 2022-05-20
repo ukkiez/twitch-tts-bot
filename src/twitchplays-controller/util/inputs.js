@@ -80,7 +80,7 @@ const inputs = {
     press( hold, [ Up, _light ] );
   },
   // light attack
-  l: ( hold ) => {
+  li: ( hold ) => {
     press( hold, _light );
   },
   // downlight

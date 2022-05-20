@@ -14,9 +14,13 @@ const defaultDelay = framesToMs( 15 );
 const dashDelay = framesToMs( 13 );
 
 const _inputsByCommandKey = {
+  u: "up",
   n: "up",
+  r: "right",
   e: "right",
+  d: "down",
   s: "down",
+  l: "left",
   w: "left",
 
   dash: "dash",
@@ -30,9 +34,9 @@ const _inputsByCommandKey = {
   dashjump: "dashJump",
   dj: "dashJump",
 
-  light: "l",
+  light: "li",
   ul: "ul",
-  l: "l",
+  li: "li",
   dl: "dl",
 
   heavy: "h",
@@ -227,7 +231,7 @@ const exec = async ( commands, restart ) => {
     return;
   }
 
-  for ( const { key, hold, delay } of commands ) {
+  for ( let { key, hold, delay } of commands ) {
     const input = inputsByCommandKey.get( key );
     if ( !inputs[ input ] ) {
       console.error( `Unknown input "${ input } (key: ${ key })".` );
@@ -235,6 +239,10 @@ const exec = async ( commands, restart ) => {
 
     inputs[ input ]( hold );
     if ( delay ) {
+      if ( delay > 5000 ) {
+        delay = 5000;
+      }
+
       await inputs.sleep( delay );
     }
   }
