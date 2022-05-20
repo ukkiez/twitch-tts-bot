@@ -102,6 +102,13 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  const userName = context[ "display-name" ];
+
+  const { "user-id": userId } = context;
+  if ( !userId ) {
+    return false;
+  }
+
   if ( context[ "custom-reward-id" ] === "064667d5-71be-425a-9c9f-3dbea70957d1" ) {
     // time the user out when they redeem the "timeout self" channel point
     // reward

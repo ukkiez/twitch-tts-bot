@@ -12,6 +12,13 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  const userName = context[ "display-name" ];
+
+  const { "user-id": userId } = context;
+  if ( !userId ) {
+    return false;
+  }
+
   const { broadcaster } = getUserLevel( context );
   if ( broadcaster ) {
     if ( message === "!twitchplays" ) {

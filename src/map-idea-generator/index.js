@@ -47,6 +47,13 @@ client.on( "message", ( target, context, message, self ) => {
     return;
   }
 
+  const userName = context[ "display-name" ];
+
+  const { "user-id": userId } = context;
+  if ( !userId ) {
+    return false;
+  }
+
   if ( message.startsWith( "!map" ) || message.startsWith( "!idea" ) ) {
     let number = parseInt( message.split( " " )[ 1 ], 10 ) || 1;
 
