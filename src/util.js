@@ -23,4 +23,15 @@ const fetch = ( host, path, callback ) => {
   return data;
 }
 
+const getUserLevel = ( context ) => {
+  const { broadcaster, mod } = context.badges || {};
+
+  return {
+    broadcaster,
+    mod,
+
+    isNotPleb: ( broadcaster || mod ),
+  }
+}
+
 module.exports = { randomElement, fetch };

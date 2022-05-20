@@ -1,4 +1,4 @@
-const { client } = "../client.js";
+const { client, checkMessage } = "../client.js";
 
 const fs = require( "fs" );
 

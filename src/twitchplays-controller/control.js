@@ -221,9 +221,7 @@ const exec = async ( commands ) => {
 }
 
 const parse = ( message ) => {
-  console.time( "parseMessage()" );
   const commands = parseMessage( message );
-  console.timeEnd( "parseMessage()" );
 
   console.log( { commands } );
 
@@ -231,7 +229,7 @@ const parse = ( message ) => {
     return;
   }
 
-  // exec( commands );
+  exec( commands );
 };
 
 module.exports = { parse };

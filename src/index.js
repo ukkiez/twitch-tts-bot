@@ -1,7 +1,7 @@
 const say = require( "say" );
 const fs = require( "fs" );
 
-const { client } = require( "./client.js" );
+const { client, checkMessage } = require( "./client.js" );
 
 const preferencesByUserId = require( "../preferences.json");
 const { voices, rates } = require( "./data.js" );
@@ -12,7 +12,7 @@ const getBop = require( "./special-commands/bop.js" );
 const getBopUkkiez = require( "./special-commands/god.js" );
 
 require( "./map-idea-generator/index.js" );
-require( "./twitch-plays/index.js" );
+require( "./twitch-plays.js" );
 
 const localesBySpeaker = new Map();
 for ( const { speaker, locale } of voices ) {
@@ -101,18 +101,7 @@ const saveUserPreference = ( userId, preference ) => {
 
 // called every time a message is sent in the chat
 client.on( "message", ( target, context, message, self ) => {
-  // ignore messages from the bot itself
-  if ( self ) {
-    return;
-  }
-
-  const userName = context[ "display-name" ];
-  if ( userName.toLowerCase() === "nightbot" ) {
-    return;
-  }
-
-  const { "user-id": userId } = context;
-  if ( !userId ) {
+  if ( !checkMessage( target, context, message, self ) ) {
     return;
   }
 
@@ -144,10 +133,6 @@ client.on( "message", ( target, context, message, self ) => {
       client.say( target, "Welcome, you narcissist LilZ" );
       speak( "Welcome, you narcissist.", null, getRandomVoice() );
     }
-    return;
-  }
-
-  if ( /^\!sr/i.test( message ) || /^\!songrequest/i.test( message ) ) {
     return;
   }
 
@@ -336,4 +321,4 @@ client.on( "message", ( target, context, message, self ) => {
   speak( message, userId );
 } );
 
-module.exports = { speak };
+module.exports = { speak, getRandomVoice };

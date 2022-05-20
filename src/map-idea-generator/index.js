@@ -1,4 +1,4 @@
-const { client } = require( "../client.js" );
+const { client, checkMessage } = require( "../client.js" );
 
 const { templates, dataByCategory } = require( "./data.js" );
 const { rE, replaceInString, titleCase } = require( "./util.js" );
@@ -43,18 +43,7 @@ const generateMapIdea = ( numberOfIdeas ) => {
 
 // called every time a message is sent in the chat
 client.on( "message", ( target, context, message, self ) => {
-  // ignore messages from the bot itself
-  if ( self ) {
-    return;
-  }
-
-  const userName = context[ "display-name" ];
-  if ( userName.toLowerCase() === "nightbot" ) {
-    return;
-  }
-
-  const { "user-id": userId } = context;
-  if ( !userId ) {
+  if ( !checkMessage( target, context, message, self ) ) {
     return;
   }
 
