@@ -39,6 +39,8 @@ client.on( "message", ( target, context, message, self ) => {
         client.say( target, "Twitch Plays mode disabled. dgMoley" );
         speak( "Twitch Plays mode disabled.", null, getRandomVoice() );
       }
+
+      return;
     }
   }
 

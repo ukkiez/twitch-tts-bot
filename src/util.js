@@ -34,4 +34,4 @@ const getUserLevel = ( context ) => {
   }
 }
 
-module.exports = { randomElement, fetch };
+module.exports = { randomElement, fetch, getUserLevel };
